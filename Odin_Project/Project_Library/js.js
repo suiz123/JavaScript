@@ -1,5 +1,6 @@
 const myLibrary = [];
 
+
 function CreateBook(name, author, id) {
     
     this.name = name;
@@ -21,11 +22,64 @@ function addBookToLibrary() {
     
     myLibrary.push(book);
 
+   
 };
 
 
-console.log(myLibrary);
-addBookToLibrary();
+
+function createLibrary(){   
+
+    myLibrary.sort((a, b) => a.name.localeCompare(b.name));
+
+    tabla.innerHTML = '';
+    
+    const tr = document.createElement('tr');
+    tr.style.cssText='background-color:rgba(201, 163, 50, 0.62)'
+    const th = document.createElement('th');
+    th.textContent= 'Nombre';
+    const th1 = document.createElement('th');
+    th1.textContent= 'Autor';
+    const th2 = document.createElement('th');
+    th2.textContent= 'ID';
+    tr.append(th, th1, th2);
+    tabla.append(tr);
+
+    for (let i = 0; i < myLibrary.length; i++) {
+        const tr = document.createElement('tr');
+        tr.setAttribute('id', `tr${i+1}`)
+        let libro = myLibrary[i];
+        
+        for (let l in libro){
+            const td = document.createElement('td');
+            td.style.cssText='padding: 10px; border: 2px solid; text-align: left;';
+            td.textContent= libro[l];
+            tr.append(td);
+            
+        }
+        tabla.appendChild(tr);
+        
+    }
+    
+};
+
+
+
+
+//Boton Div
+
+let boton = document.createElement('button');
+boton.setAttribute('id', 'boton');
+boton.textContent='Añadir Libro';
+
+boton.addEventListener('click',() => {
+    addBookToLibrary();
+    
+    createLibrary();
+    
+    library.appendChild(tabla);
+    console.log(myLibrary);
+    
+})
 
 //Conjunto fragmento para añadir al body.
 
@@ -62,32 +116,17 @@ tabla.append(tr);
 library.appendChild(tabla);
 
 
-//Boton Div
-
-let boton = document.createElement('button');
-boton.setAttribute('id', 'boton');
-boton.textContent='Añadir Libro';
-
-
-
 fragment.appendChild(boton);
 
-//Blucle para cada elemento la matriz
-for (let i = 0; i < myLibrary.length; i++) {
-    const tr = document.createElement('tr');
-    
-    let libro = myLibrary[i];
-   
-    for (let l in libro){
-        const td = document.createElement('td');
-        td.style.cssText='padding: 10px; border: 2px solid; text-align: left;';
-        td.textContent= libro[l];
-        tr.append(td);
-        
-    }
-    tabla.append(tr);
 
-}
+
+// Dialog
+
+const dialog = document.createElement('dialog');
+
+
+
+
 
 
 
