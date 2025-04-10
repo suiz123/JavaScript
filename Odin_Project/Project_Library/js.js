@@ -122,7 +122,44 @@ fragment.appendChild(boton);
 
 // Dialog
 
+
 const dialog = document.createElement('dialog');
+dialog.setAttribute('id', 'dialog');
+dialog.style.cssText= "width: 25%; height: 20%";
+
+const showButton = document.createElement('button');
+showButton.textContent= 'dialog';
+showButton.setAttribute('id', 'showDialog');
+
+const nombre = document.createElement('p');
+nombre.textContent='nombre';
+const autor = document.createElement('p');
+autor.textContent='autor';
+const closeButton = document.createElement('button');
+closeButton.setAttribute('id', 'closeDialog');
+closeButton.textContent='Cerrar';
+
+
+const form = document.createElement('form');
+form.setAttribute('method','dialog');
+
+dialog.append(nombre,autor, closeButton);
+
+
+
+showButton.addEventListener('click', () => {
+    dialog.showModal();
+
+});
+
+closeButton.addEventListener('click', () => {
+    dialog.close();
+});
+
+
+fragment.appendChild(dialog);
+fragment.appendChild(showButton);
+
 
 
 
@@ -132,3 +169,14 @@ const dialog = document.createElement('dialog');
 
 
 document.body.appendChild(fragment);
+
+
+
+
+
+
+
+
+
+
+
