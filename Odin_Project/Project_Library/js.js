@@ -1,4 +1,4 @@
-const myLibrary = [];
+let myLibrary = [];
 
 
 function CreateBook(name, author, id) {
@@ -35,30 +35,51 @@ function createLibrary(){
     
     const tr = document.createElement('tr');
     tr.style.cssText='background-color:rgba(201, 163, 50, 0.62)'
-    const th = document.createElement('th');
-    th.textContent= 'Nombre';
-    const th1 = document.createElement('th');
-    th1.textContent= 'Autor';
-    const th2 = document.createElement('th');
-    th2.textContent= 'ID';
-    tr.append(th, th1, th2);
+    const thNombre = document.createElement('th');
+    thNombre.textContent= 'Nombre';
+    const thAutor = document.createElement('th');
+    thAutor.textContent= 'Autor';
+    const thId = document.createElement('th');
+    thId.textContent= 'ID';
+  
+    tr.append(thNombre, thAutor, thId);
     tabla.append(tr);
 
     for (let i = 0; i < myLibrary.length; i++) {
         const tr = document.createElement('tr');
-        tr.setAttribute('id', `tr${i+1}`)
+        tr.setAttribute('id', `tr${i+1}`);
         let libro = myLibrary[i];
         
         for (let l in libro){
             const td = document.createElement('td');
+            
+
             td.style.cssText='padding: 10px; border: 2px solid; text-align: left;';
             td.textContent= libro[l];
             tr.append(td);
             
-        }
+        };
+        const tdBorrarButton = document.createElement('td');
+        const borrarButton = document.createElement('button');
+        
+        borrarButton.textContent='Eliminar';
+        borrarButton.style.cssText='padding: 10px; border: 2px solid; text-align: left; background-color: red;';
+        borrarButton.addEventListener('click', () => {
+            let nodoElement=borrarButton.parentNode;
+            let nombre = nodoElement.children[0].innerText;
+            let autor = nodoElement.children[1].innerText;
+            let idd = nodoElement.children[2].innerText;
+            console.log(nombre,autor,idd);
+
+            myLibrary = myLibrary.filter(i => i.id !== idd);
+            console.log(myLibrary);
+            createLibrary();
+        });
+        
+        tr.append(borrarButton);
         tabla.appendChild(tr);
         
-    }
+    };
     
 };
 
@@ -105,13 +126,15 @@ tabla.style.cssText= "width: 100%; font-family: arial, sans-serif;border-collaps
 
 const tr = document.createElement('tr');
 tr.style.cssText='background-color:rgba(201, 163, 50, 0.62)'
-const th = document.createElement('th');
-th.textContent= 'Nombre';
-const th1 = document.createElement('th');
-th1.textContent= 'Autor';
-const th2 = document.createElement('th');
-th2.textContent= 'ID';
-tr.append(th, th1, th2);
+const thNombre = document.createElement('th');
+thNombre.textContent= 'Nombre';
+const thAutor = document.createElement('th');
+thAutor.textContent= 'Autor';
+const thId = document.createElement('th');
+thId.textContent= 'ID';
+const thBoton = document.createElement('th');
+thBoton.textContent='Borrar elemento';
+tr.append(thNombre, thAutor, thId, thBoton);
 tabla.append(tr);
 library.appendChild(tabla);
 
@@ -120,30 +143,78 @@ fragment.appendChild(boton);
 
 
 
-// Dialog
+// Dialog 
 
 
 const dialog = document.createElement('dialog');
 dialog.setAttribute('id', 'dialog');
 dialog.style.cssText= "width: 25%; height: 20%";
 
+const buttonsDiv=document.createElement('div');
+buttonsDiv.id='buttonsDiv';
+buttonsDiv.style.cssText="display: flex; justify-content: center; align-items: center; width: 100%;";
+
+
 const showButton = document.createElement('button');
-showButton.textContent= 'dialog';
+showButton.textContent= 'Añadir libro con dialog';
+//showButton.style.cssText = "display: flex; justify-content: center; align-items: center; width: 100%; ";
 showButton.setAttribute('id', 'showDialog');
 
-const nombre = document.createElement('p');
-nombre.textContent='nombre';
-const autor = document.createElement('p');
-autor.textContent='autor';
+buttonsDiv.append(boton,showButton);
+
+
+
 const closeButton = document.createElement('button');
 closeButton.setAttribute('id', 'closeDialog');
 closeButton.textContent='Cerrar';
 
+        //Dialog Formulario
 
 const form = document.createElement('form');
 form.setAttribute('method','dialog');
 
-dialog.append(nombre,autor, closeButton);
+const labelNombre = document.createElement('label');
+labelNombre.textContent='Nombre del libro: ';
+const inputNombre = document.createElement('input');
+inputNombre.id='inputNombre';
+inputNombre.type = 'text';
+inputNombre.name= 'Nombre';
+labelNombre.append(inputNombre);
+
+const saltoDeLinea=document.createElement('br');
+
+const labelAutor = document.createElement('label');
+labelAutor.textContent='Autor del libro: ';
+const inputAutor = document.createElement('input');
+inputAutor.id='inputAutor';
+inputAutor.type='text';
+labelAutor.append(inputAutor);
+
+const inputSubmit= document.createElement('input');
+inputSubmit.type='submit';
+inputSubmit.value='Enviar';
+
+inputSubmit.addEventListener('click',() => {
+
+    event.preventDefault();
+    const id = crypto.randomUUID();
+    const name = document.getElementById('inputNombre').value;
+    const author =  document.getElementById('inputAutor').value;
+   
+    
+    let book = new CreateBook(name, author, id);
+    
+    myLibrary.push(book);
+
+    createLibrary();
+    dialog.close();
+})
+
+form.append(labelNombre,saltoDeLinea,labelAutor,document.createElement('br'), inputSubmit);
+
+
+
+dialog.append( form,closeButton);
 
 
 
@@ -158,7 +229,7 @@ closeButton.addEventListener('click', () => {
 
 
 fragment.appendChild(dialog);
-fragment.appendChild(showButton);
+fragment.appendChild(buttonsDiv);
 
 
 
