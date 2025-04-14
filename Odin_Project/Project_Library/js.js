@@ -1,25 +1,34 @@
 let myLibrary = [];
 
 
-function CreateBook(name, author, id) {
+function CreateBook(name, author, id, read) {
     
     this.name = name;
     this.author = author;
     this.id = id;
+    this.read = read;
+    
     
     
     
 };
+
+CreateBook.prototype.status = function(){
+    this.read = !this.read;
+
+}
 
 function addBookToLibrary() {
 
     const id = crypto.randomUUID();
     const name = prompt("Ingresa el nombre del libro:");
     const author = prompt("Ingresa el autor del libro:");
+    const read = prompt('Estado, true or false: ')
     //const date = prompt("Ingresa la fecha de publicación del libro:");
     
-    let book = new CreateBook(name, author, id);
+    let book = new CreateBook(name, author, id, read);
     
+
     myLibrary.push(book);
 
    
@@ -41,8 +50,10 @@ function createLibrary(){
     thAutor.textContent= 'Autor';
     const thId = document.createElement('th');
     thId.textContent= 'ID';
+    const thEstado = document.createElement('th');
+    thEstado.textContent='Estado';
   
-    tr.append(thNombre, thAutor, thId);
+    tr.append(thNombre, thAutor, thId, thEstado);
     tabla.append(tr);
 
     for (let i = 0; i < myLibrary.length; i++) {
@@ -51,12 +62,19 @@ function createLibrary(){
         let libro = myLibrary[i];
         
         for (let l in libro){
-            const td = document.createElement('td');
-            
 
-            td.style.cssText='padding: 10px; border: 2px solid; text-align: left;';
-            td.textContent= libro[l];
-            tr.append(td);
+            if (libro.hasOwnProperty(l)) {
+
+                const td = document.createElement('td');
+                if (l === 'read') {
+                    td.textContent= libro.read ? 'leido':'no leido';
+
+                } else {
+                    td.textContent= libro[l];
+                }
+                td.style.cssText='padding: 10px; border: 2px solid; text-align: left;';
+                tr.append(td);
+            };
             
         };
         const tdBorrarButton = document.createElement('td');
@@ -65,6 +83,7 @@ function createLibrary(){
         borrarButton.textContent='Eliminar';
         borrarButton.style.cssText='padding: 10px; border: 2px solid; text-align: left; background-color: red;';
         borrarButton.addEventListener('click', () => {
+
             let nodoElement=borrarButton.parentNode;
             let nombre = nodoElement.children[0].innerText;
             let autor = nodoElement.children[1].innerText;
@@ -75,8 +94,22 @@ function createLibrary(){
             console.log(myLibrary);
             createLibrary();
         });
+
+        const tdstatusbutton=document.createElement('td');
+        const statusbutton = document.createElement('button');
+        statusbutton.textContent='Cambiar estado';
+        statusbutton.style.cssText='padding: 10px; border: 2px solid; text-align: left; background-color: green;';
+        statusbutton.id = 'statusButton'
+        statusbutton.addEventListener('click', () =>{
+
+            //let nodopadre = statusbutton.parentNode;
+            libro.status();
+            createLibrary();
+        });
         
-        tr.append(borrarButton);
+        tdstatusbutton.append(statusbutton);
+        
+        tr.append(statusbutton, borrarButton);
         tabla.appendChild(tr);
         
     };
@@ -133,7 +166,7 @@ thAutor.textContent= 'Autor';
 const thId = document.createElement('th');
 thId.textContent= 'ID';
 const thBoton = document.createElement('th');
-thBoton.textContent='Borrar elemento';
+thBoton.textContent='Estado';
 tr.append(thNombre, thAutor, thId, thBoton);
 tabla.append(tr);
 library.appendChild(tabla);
@@ -194,15 +227,24 @@ const inputSubmit= document.createElement('input');
 inputSubmit.type='submit';
 inputSubmit.value='Enviar';
 
+const labelStatus = document.createElement('label');
+labelStatus.textContent='Leido?: true/false: ';
+const inputStatus= document.createElement('input');
+inputStatus.id='inputStatus';
+inputStatus.type='text';
+labelStatus.append(inputStatus);
+
+
+
 inputSubmit.addEventListener('click',() => {
 
-    event.preventDefault();
     const id = crypto.randomUUID();
     const name = document.getElementById('inputNombre').value;
     const author =  document.getElementById('inputAutor').value;
-   
+    const read = document.getElementById('inputStatus').value === 'true';
+
     
-    let book = new CreateBook(name, author, id);
+    let book = new CreateBook(name, author, id, read);
     
     myLibrary.push(book);
 
@@ -210,7 +252,7 @@ inputSubmit.addEventListener('click',() => {
     dialog.close();
 })
 
-form.append(labelNombre,saltoDeLinea,labelAutor,document.createElement('br'), inputSubmit);
+form.append(labelNombre,saltoDeLinea,labelAutor,document.createElement('br'),labelStatus,document.createElement('br'), inputSubmit);
 
 
 
@@ -233,21 +275,4 @@ fragment.appendChild(buttonsDiv);
 
 
 
-
-
-
-
-
-
 document.body.appendChild(fragment);
-
-
-
-
-
-
-
-
-
-
-
